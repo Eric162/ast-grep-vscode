@@ -48,21 +48,21 @@ function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
 
-export function LangSelect() {
-  const [lang, setLang] = useSearchField('lang')
+export function LangSelectBase({
+  onChange,
+  value: lang,
+}: {
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void
+  value: string
+}) {
   const title = lang
     ? `Search pattern in ${lang}`
     : 'Search pattern in specific language'
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      setLang(e.target.value)
-    },
-    [setLang],
-  )
   return (
     <label
       {...stylex.props(styles.langButton, lang ? styles.langActive : null)}
       title={title}
+      id="lang-select"
     >
       <select
         {...stylex.props(styles.langDropdown)}
@@ -80,4 +80,16 @@ export function LangSelect() {
       {lang ? <Icon name={lang} style={styles.langIcon} /> : <VscListFlat />}
     </label>
   )
+}
+
+export function LangSelect() {
+  const [lang, setLang] = useSearchField('lang')
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setLang(e.target.value)
+    },
+    [setLang],
+  )
+
+  return <LangSelectBase onChange={onChange} value={lang} />
 }
